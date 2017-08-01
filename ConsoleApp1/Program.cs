@@ -7,9 +7,9 @@ namespace ConsoleApp1
         public static void Main(string[] args)
         {
             var builds = TeamCityAPIClient.ObterBuilsdDaRelease();
-
-            var detalhesBuilds = RelatorioCSV.ObterDadosParaRelatorio(builds);
-            RelatorioCSV.ExportarCSV(detalhesBuilds);
+            var relatorioCSV = new RelatorioCSV("C:/Temp/DevOps.csv");
+            var detalhesBuilds = relatorioCSV.ObterDadosParaRelatorio(builds);
+            relatorioCSV.ExportarCSV(detalhesBuilds);
 
             Console.ReadKey();
         }

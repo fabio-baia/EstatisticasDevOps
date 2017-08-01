@@ -7,9 +7,16 @@ using System.Text;
 
 namespace ConsoleApp1
 {
-    public static class RelatorioCSV
+    public class RelatorioCSV
     {
-        public static List<BuildDetalhes> ObterDadosParaRelatorio(List<Build> builds)
+        private string pathArquivo;
+
+        public RelatorioCSV(string pathArquivo)
+        {
+            this.pathArquivo = pathArquivo;
+        }
+
+        public List<BuildDetalhes> ObterDadosParaRelatorio(List<Build> builds)
         {
             var detalhesBuilds = new List<BuildDetalhes>();
 
@@ -53,7 +60,7 @@ namespace ConsoleApp1
             return detalhesBuilds;
         }
 
-        public static void ExportarCSV(List<BuildDetalhes> detalhesBuilds)
+        public void ExportarCSV(List<BuildDetalhes> detalhesBuilds)
         {
             var csv = new StringBuilder();
 
@@ -88,7 +95,7 @@ namespace ConsoleApp1
                 csv.AppendLine(newLine);
             }
 
-            File.WriteAllText("C:/Temp/DevOps.csv", csv.ToString());
+            File.WriteAllText(pathArquivo, csv.ToString());
         }
     }
 }
