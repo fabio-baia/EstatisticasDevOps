@@ -2,7 +2,7 @@
 
 namespace ConsoleApp1
 {
-    public class Coisa
+    public class BuildConfiguration
     {
         public List<Build> Build { get; set; }
     }

@@ -50,8 +50,8 @@ namespace ConsoleApp1
         {
             var response = ConsumirEndpoint("builds/?locator=buildType:Ag_CSharp_Release46");
 
-            var coisa = JsonConvert.DeserializeObject<Coisa>(response);
-            return coisa.Build;
+            var buildConfiguration = JsonConvert.DeserializeObject<BuildConfiguration>(response);
+            return buildConfiguration.Build;
         }
 
         public List<Property> ObterPropriedades(int buildId)
