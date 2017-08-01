@@ -10,7 +10,7 @@ namespace ConsoleApp1
             var config = ConfigurationManager.AppSettings;
 
             var teamCityApiClient = new TeamCityAPIClient(config["usuarioTeamCity"], config["senhaTeamCity"]);
-            var relatorioCSV = new RelatorioCSV("C:/Temp/DevOps.csv", teamCityApiClient);
+            var relatorioCSV = new RelatorioCSV(config["diretorioCSV"], teamCityApiClient);
 
             var builds = teamCityApiClient.ObterBuilsdDaRelease();
             var detalhesBuilds = relatorioCSV.ObterDadosParaRelatorio(builds);
