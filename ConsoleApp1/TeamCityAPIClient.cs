@@ -24,9 +24,9 @@ namespace ConsoleApp1
             request.Headers.Add("Authorization", headerAuthorization);
             request.Accept = "application/json";
 
-            WebResponse response = request.GetResponse();
-            Stream dataStream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(dataStream);
+            var response = request.GetResponse();
+            var dataStream = response.GetResponseStream();
+            var reader = new StreamReader(dataStream);
             string responseFromServer = reader.ReadToEnd();
 
             reader.Close();
@@ -50,7 +50,7 @@ namespace ConsoleApp1
         {
             var response = ConsumirEndpoint("builds/?locator=buildType:Ag_CSharp_Release46");
 
-            Coisa coisa = JsonConvert.DeserializeObject<Coisa>(response);
+            var coisa = JsonConvert.DeserializeObject<Coisa>(response);
             return coisa.Build;
         }
 
@@ -59,7 +59,7 @@ namespace ConsoleApp1
             var endpoint = string.Format("builds/id:{0}/statistics", buildId);
             var response = ConsumirEndpoint(endpoint);
 
-            Build build = JsonConvert.DeserializeObject<Build>(response);
+            var build = JsonConvert.DeserializeObject<Build>(response);
             return build.Property;
         }
 
@@ -68,7 +68,7 @@ namespace ConsoleApp1
             var endpoint = string.Format("builds/id:{0}", buildId);
             var response = ConsumirEndpoint(endpoint);
 
-            Build build = JsonConvert.DeserializeObject<Build>(response);
+            var build = JsonConvert.DeserializeObject<Build>(response);
             return build.StartDate;
         }
     }
