@@ -1,19 +1,25 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Text;
 
 namespace ConsoleApp1
 {
-    public static class TeamCityAPIClient
+    public class TeamCityAPIClient
     {
-        private static string ConsumirEndpoint(string endpoint)
+        private string headerAuthorization;
+
+        public TeamCityAPIClient(string usuario, string senha)
+        {
+            ConfigurarHeaderAuthorization(usuario, senha);
+        }
+
+        private string ConsumirEndpoint(string endpoint)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
-            request.Headers.Add("Authorization", ObterBasicHeaderAuthorization());
+            request.Headers.Add("Authorization", headerAuthorization);
             request.Accept = "application/json";
 
             WebResponse response = request.GetResponse();
@@ -27,21 +33,18 @@ namespace ConsoleApp1
             return responseFromServer;
         }
 
-        private static string ObterBasicHeaderAuthorization()
+        private void ConfigurarHeaderAuthorization(string usuario, string senha)
         {
-            var usuario = ConfigurationManager.AppSettings["usuarioTeamCity"];
-            var senha = ConfigurationManager.AppSettings["senhaTeamCity"];
-
             if (usuario == String.Empty || senha == String.Empty)
                 throw new Exception("É preciso configurar os dados de acesso ao TeamCity no App.config");
 
-            string authInfo = $"{usuario}:{senha}";
-
+            var authInfo = $"{usuario}:{senha}";
             authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-            return "Basic " + authInfo;
+
+            this.headerAuthorization = "Basic " + authInfo;
         }
 
-        public static List<Build> ObterBuilsdDaRelease()
+        public List<Build> ObterBuilsdDaRelease()
         {
             var response = ConsumirEndpoint("http://mga-tc001:6081/app/rest/builds/?locator=buildType:Ag_CSharp_Release46");
 
@@ -49,7 +52,7 @@ namespace ConsoleApp1
             return coisa.Build;
         }
 
-        public static List<Property> ObterPropriedades(int buildId)
+        public List<Property> ObterPropriedades(int buildId)
         {
             var endpoint = string.Format("http://mga-tc001:6081/app/rest/builds/id:{0}/statistics", buildId);
             var response = ConsumirEndpoint(endpoint);
@@ -58,7 +61,7 @@ namespace ConsoleApp1
             return build.Property;
         }
 
-        public static string ObterHoraBuild(int buildId)
+        public string ObterHoraBuild(int buildId)
         {
             var endpoint = string.Format("http://mga-tc001:6081/app/rest/builds/id:{0}", buildId);
             var response = ConsumirEndpoint(endpoint);

@@ -10,10 +10,12 @@ namespace ConsoleApp1
     public class RelatorioCSV
     {
         private string pathArquivo;
+        private TeamCityAPIClient teamCityApiClient;
 
-        public RelatorioCSV(string pathArquivo)
+        public RelatorioCSV(string pathArquivo, TeamCityAPIClient teamCityApiClient)
         {
             this.pathArquivo = pathArquivo;
+            this.teamCityApiClient = teamCityApiClient;
         }
 
         public List<BuildDetalhes> ObterDadosParaRelatorio(List<Build> builds)
@@ -22,8 +24,8 @@ namespace ConsoleApp1
 
             foreach (var build in builds)
             {
-                var hora = TeamCityAPIClient.ObterHoraBuild(build.Id);
-                var estatisticas = TeamCityAPIClient.ObterPropriedades(build.Id);
+                var hora = teamCityApiClient.ObterHoraBuild(build.Id);
+                var estatisticas = teamCityApiClient.ObterPropriedades(build.Id);
                 build.Property = estatisticas;
 
                 Console.WriteLine(JsonConvert.SerializeObject(build));

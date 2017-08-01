@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 
 namespace ConsoleApp1
 {
@@ -6,9 +7,14 @@ namespace ConsoleApp1
     {
         public static void Main(string[] args)
         {
-            var builds = TeamCityAPIClient.ObterBuilsdDaRelease();
-            var relatorioCSV = new RelatorioCSV("C:/Temp/DevOps.csv");
+            var config = ConfigurationManager.AppSettings;
+
+            var teamCityApiClient = new TeamCityAPIClient(config["usuarioTeamCity"], config["senhaTeamCity"]);
+            var relatorioCSV = new RelatorioCSV("C:/Temp/DevOps.csv", teamCityApiClient);
+
+            var builds = teamCityApiClient.ObterBuilsdDaRelease();
             var detalhesBuilds = relatorioCSV.ObterDadosParaRelatorio(builds);
+
             relatorioCSV.ExportarCSV(detalhesBuilds);
 
             Console.ReadKey();
