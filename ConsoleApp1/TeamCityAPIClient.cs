@@ -10,6 +10,7 @@ namespace ConsoleApp1
     public class TeamCityAPIClient
     {
         private string headerAuthorization;
+        private string baseEndpoint = "http://mga-tc001:6081/app/rest/";
 
         public TeamCityAPIClient(string usuario, string senha)
         {
@@ -18,7 +19,8 @@ namespace ConsoleApp1
 
         private string ConsumirEndpoint(string endpoint)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
+            var fullEndpoint = baseEndpoint + endpoint;
+            var request = (HttpWebRequest)WebRequest.Create(fullEndpoint);
             request.Headers.Add("Authorization", headerAuthorization);
             request.Accept = "application/json";
 
@@ -46,7 +48,7 @@ namespace ConsoleApp1
 
         public List<Build> ObterBuilsdDaRelease()
         {
-            var response = ConsumirEndpoint("http://mga-tc001:6081/app/rest/builds/?locator=buildType:Ag_CSharp_Release46");
+            var response = ConsumirEndpoint("builds/?locator=buildType:Ag_CSharp_Release46");
 
             Coisa coisa = JsonConvert.DeserializeObject<Coisa>(response);
             return coisa.Build;
@@ -54,7 +56,7 @@ namespace ConsoleApp1
 
         public List<Property> ObterPropriedades(int buildId)
         {
-            var endpoint = string.Format("http://mga-tc001:6081/app/rest/builds/id:{0}/statistics", buildId);
+            var endpoint = string.Format("builds/id:{0}/statistics", buildId);
             var response = ConsumirEndpoint(endpoint);
 
             Build build = JsonConvert.DeserializeObject<Build>(response);
@@ -63,7 +65,7 @@ namespace ConsoleApp1
 
         public string ObterHoraBuild(int buildId)
         {
-            var endpoint = string.Format("http://mga-tc001:6081/app/rest/builds/id:{0}", buildId);
+            var endpoint = string.Format("builds/id:{0}", buildId);
             var response = ConsumirEndpoint(endpoint);
 
             Build build = JsonConvert.DeserializeObject<Build>(response);
